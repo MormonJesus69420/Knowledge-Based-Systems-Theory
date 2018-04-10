@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Shpider Editor
@@ -43,14 +44,14 @@ class Coordinate:
 
     def get_neighbours(self):
         # Get neighbours, some can be None
-        neigh = [self.get_up(), self.get_left(),
-                 self.get_down(), self.get_right()]
+        neigh = [self.get_up(), self.get_right(),
+                 self.get_down(), self.get_left()]
 
         # Create new list without None elements from neigh list
         return [x for x in neigh if x is not None]
 
     def __eq__(self, other):
-        return self.__dict__ == other.__dict__
+        return self.x == other.x and self.y == other.y
 
     def to_string(self):
         return "x: {}, y: {}, max_x: {}, max_y: {}".format(

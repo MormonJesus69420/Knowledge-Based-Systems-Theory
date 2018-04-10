@@ -10,6 +10,7 @@ Author:   MormonJesus69420
 Date:     Yes, please
 """
 
+import matplotlib.pyplot as plt
 import coordinate as c
 import numpy as np
 
@@ -26,24 +27,32 @@ class Search:
                      [1, 1, 1, 1, 1, 1]])
 
     def depth_first_search(start, end):
+        # Define search stack S
         S = [start]
+        # Define visited stack H
         H = list()
+        # Define 9x6 matrix for showing visited nodes, 0 not visited, 1 visited
         matrix = np.zeros((9, 6), dtype=int)
 
         while S:
+            # Pop last element from S
             i = S.pop()
+            # Add element to H
             H.append(i)
-            matrix[i.x, i.y] = 1
+            # Mark element as visited in matrix
+            matrix[i.y][i.x] = 1
 
-            if i is end:
-                return matrix
+            # If element is equal to end goal, stop and return matrix
+            if i == end:
+                plt.imshow(matrix)
+                return
             else:
+                # Get neighbours in array
                 neigh = i.get_neighbours()
+                # Add unvisited neighbours to S
                 S.extend([cord for cord in neigh if cord not in H])
 
-            print(matrix)
-
-        return matrix
 
 
-Search.depth_first_search(c.Coordinate(0, 1), c.Coordinate(4, 7))
+# Call method static way
+Search.depth_first_search(c.Coordinate(1,0), c.Coordinate(4, 7))
