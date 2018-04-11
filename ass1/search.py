@@ -22,7 +22,6 @@ class Search:
                      [1, 1, 3, 3, 2, 1],
                      [1, 1, 1, 2, 2, 1],
                      [1, 1, 1, 1, 1, 1],
-                     #[np.inf, np.inf, np.inf, np.inf, np.inf, np.inf],
                      [1, 2, 3, 3, 1, 1],
                      [1, 1, 1, 1, 1, 1],
                      [1, 3, 1, 1, 1, 1]])
@@ -33,45 +32,6 @@ class Search:
 
     def estimated_cost(start, end):
         return abs(start.x - end.x) + abs(start.y - end.y)
-
-    def depth_first_search(start, end):
-        return Search.default_search(start, end, True)
-
-    def breadth_first_search(start, end):
-        return Search.default_search(start, end, False)
-
-    def default_search(start, end, is_depth_first):
-        # Define search stack S
-        S = [start]
-        # Define visited stack H
-        H = []
-        # Define 9x6 matrix for showing visited nodes, 0 not visited, 1 visited
-        matrix = np.zeros((9, 6), dtype=int)
-
-        while S:
-            # Pop last element from S
-            i = S.pop()
-            # Add element to H
-            H.append(i)
-            # Mark element as visited in matrix
-            matrix[i.y][i.x] = 1
-
-            # If element is equal to end goal, stop and return matrix
-            if i == end:
-                plt.imshow(matrix)
-                return H
-            else:
-                # Get ns in array
-                neigh = i.get_neighbours()
-                # Add unvisited ns to S
-                if is_depth_first:
-                    S.extend([cord for cord in neigh if cord not in H])
-                else:
-                    S = [cord for cord in neigh if cord not in H] + S
-
-        # S stack empty, no result.
-        plt.imshow(matrix)
-        return H
 
     def a_star(start, stop):
         # Define list of evaluated elements
@@ -138,6 +98,45 @@ class Search:
             matrix[current.y, current.x] = 1
 
         return matrix
+
+    def depth_first_search(start, end):
+        return Search.default_search(start, end, True)
+
+    def breadth_first_search(start, end):
+        return Search.default_search(start, end, False)
+
+    def default_search(start, end, is_depth_first):
+        # Define search stack S
+        S = [start]
+        # Define visited stack H
+        H = []
+        # Define 9x6 matrix for showing visited nodes, 0 not visited, 1 visited
+        matrix = np.zeros((9, 6), dtype=int)
+
+        while S:
+            # Pop last element from S
+            i = S.pop()
+            # Add element to H
+            H.append(i)
+            # Mark element as visited in matrix
+            matrix[i.y][i.x] = 1
+
+            # If element is equal to end goal, stop and return matrix
+            if i == end:
+                plt.imshow(matrix)
+                return H
+            else:
+                # Get ns in array
+                neigh = i.get_neighbours()
+                # Add unvisited ns to S
+                if is_depth_first:
+                    S.extend([cord for cord in neigh if cord not in H])
+                else:
+                    S = [cord for cord in neigh if cord not in H] + S
+
+        # S stack empty, no result.
+        plt.imshow(matrix)
+        return H
 
 #Search.depth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
 #Search.breadth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
