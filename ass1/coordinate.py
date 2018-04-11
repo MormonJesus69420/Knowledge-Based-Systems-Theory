@@ -19,10 +19,6 @@ class Coordinate:
     y = 0
 
     def __init__(self, x, y):
-        """if max_x is not None:
-            self.max_x = max_x
-        if max_y is not None:
-            self.max_y = max_y"""
         self.x = x
         self.y = y
 

@@ -26,7 +26,22 @@ class Search:
                      [1, 1, 1, 1, 1, 1],
                      [1, 1, 1, 1, 1, 1]])
 
+    def get_cost(coordinate):
+        return Search.cost[coordinate.y][coordinate.x]
+
+    def get_path_cost(path):
+        cost = 0
+        for cord in path:
+            cost += Search.get_cost(cord)
+        return cost
+
     def depth_first_search(start, end):
+        return Search.default_search(start, end, True)
+
+    def breadth_first_search(start, end):
+        return Search.default_search(start, end, False)
+
+    def default_search(start, end, is_depth_first):
         # Define search stack S
         S = [start]
         # Define visited stack H
@@ -45,14 +60,18 @@ class Search:
             # If element is equal to end goal, stop and return matrix
             if i == end:
                 plt.imshow(matrix)
-                return
+                return H
             else:
                 # Get neighbours in array
                 neigh = i.get_neighbours()
                 # Add unvisited neighbours to S
-                S.extend([cord for cord in neigh if cord not in H])
-
+                if is_depth_first:
+                    S.extend([cord for cord in neigh if cord not in H])
+                else:
+                    S = [cord for cord in neigh if cord not in H] + S
 
 
 # Call method static way
-Search.depth_first_search(c.Coordinate(1,0), c.Coordinate(4, 7))
+temp = Search.depth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
+print(Search.get_path_cost(temp))
+#Search.breadth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
