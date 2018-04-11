@@ -49,6 +49,9 @@ class Coordinate:
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
+    def __hash__(self):
+        return hash((self.x, self.y))
+
     def to_string(self):
         return "x: {}, y: {}, max_x: {}, max_y: {}".format(
                 self.x, self.y, self.max_x, self.max_y)
