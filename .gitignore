@@ -1,3 +1,9 @@
 .directory
 __pycache__/
 .idea/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.syntex.gz

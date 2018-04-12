@@ -13,23 +13,68 @@ Date:     Yes, please
 import matplotlib.pyplot as plt
 import coordinate as c
 import numpy as np
+import math
 
 
 class Search:
     # Cost of going through wall, very big to avoid path going through walls
-    w = 100
+    w = 1000
+    # Cost used to draw path in matrix
+    path = w / 2
     # Cost of going through floor, very low to encourage algorithm to use it
     f = 1
     # Cost array for movement in maze
-    cost_array = np.array([[f, f, f, f, f, w],
-                           [f, w, w, w, f, f],
-                           [f, f, f, w, w, f],
-                           [f, w, f, f, f, f],
-                           [f, w, w, f, w, f],
-                           [f, f, w, f, w, w],
-                           [w, f, w, f, f, f],
-                           [f, f, w, f, w, f],
-                           [w, f, f, f, w, f]])
+    cost_array = np.array([[w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, f, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
+                           [w, f, f, f, f, f, w, f, f, f, f, f, f, f, f, f, w, f, f, f, f, f, f, f, w, f, f, f, f, f, w, f, f, f, f, f, w, f, f, f, f, f, w, f, f, f, f, f, f, f, w],
+                           [w, f, w, w, w, w, w, f, w, w, w, f, w, w, w, f, w, f, w, f, w, w, w, f, w, w, w, f, w, f, w, w, w, f, w, f, w, f, w, w, w, f, w, w, w, f, w, w, w, f, w],
+                           [w, f, f, f, f, f, w, f, w, f, w, f, w, f, f, f, w, f, w, f, f, f, w, f, w, f, f, f, w, f, w, f, f, f, w, f, f, f, w, f, w, f, f, f, w, f, w, f, f, f, w],
+                           [w, w, w, w, w, f, w, f, w, f, w, f, w, f, w, w, w, f, w, w, w, f, w, f, w, f, w, w, w, f, w, f, w, w, w, w, w, w, w, f, w, w, w, f, w, w, w, f, w, f, w],
+                           [w, f, f, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, w, f, w, f, w, f, f, f, w, f, w, f, f, f, w, f, w, f, f, f, f, f, f, f, w, f, w, f, f, f, w, f, w],
+                           [w, f, w, f, w, w, w, w, w, f, w, f, w, w, w, w, w, f, w, f, w, f, w, w, w, w, w, f, w, w, w, w, w, f, w, f, w, w, w, w, w, f, w, f, w, f, w, w, w, f, w],
+                           [w, f, w, f, f, f, w, f, f, f, w, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, f, f, f, f, w, f, f, f, f, f, w, f, f, f, w, f, f, f, w, f, w, f, w, f, w],
+                           [w, f, w, w, w, f, w, w, w, w, w, f, w, f, w, w, w, w, w, f, w, w, w, f, w, f, w, w, w, f, w, f, w, w, w, w, w, w, w, f, w, w, w, w, w, f, w, f, w, f, w],
+                           [w, f, w, f, f, f, f, f, f, f, f, f, w, f, w, f, f, f, f, f, f, f, w, f, w, f, f, f, w, f, w, f, w, f, f, f, f, f, f, f, f, f, w, f, f, f, w, f, f, f, w],
+                           [w, f, w, w, w, w, w, w, w, w, w, f, w, f, w, w, w, f, w, w, w, f, w, f, w, w, w, f, w, w, w, f, w, f, w, w, w, f, w, w, w, f, w, f, w, w, w, f, w, w, w],
+                           [w, f, f, f, f, f, f, f, w, f, f, f, w, f, f, f, w, f, w, f, f, f, w, f, f, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, w, f, f, f, w, f, w, f, f, f, w],
+                           [w, f, w, w, w, w, w, f, w, w, w, f, w, w, w, f, w, w, w, f, w, w, w, w, w, f, w, w, w, w, w, f, w, w, w, f, w, w, w, f, w, w, w, w, w, f, w, w, w, f, w],
+                           [w, f, f, f, f, f, w, f, f, f, w, f, w, f, f, f, f, f, f, f, w, f, f, f, f, f, w, f, f, f, w, f, f, f, f, f, w, f, f, f, f, f, w, f, f, f, f, f, f, f, w],
+                           [w, w, w, w, w, w, w, w, w, f, w, f, w, f, w, w, w, w, w, w, w, f, w, f, w, w, w, f, w, f, w, w, w, w, w, w, w, f, w, f, w, w, w, f, w, w, w, w, w, w, w],
+                           [w, f, f, f, f, f, w, f, f, f, w, f, w, f, w, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, w, f, f, f, f, f, f, f, w, f, w, f, f, f, w, f, f, f, f, f, w],
+                           [w, f, w, w, w, f, w, f, w, w, w, w, w, f, w, f, w, f, w, w, w, w, w, w, w, f, w, w, w, f, w, f, w, w, w, w, w, w, w, f, w, f, w, w, w, w, w, f, w, f, w],
+                           [w, f, w, f, w, f, w, f, f, f, f, f, w, f, w, f, w, f, f, f, w, f, f, f, f, f, f, f, w, f, w, f, w, f, f, f, f, f, w, f, f, f, w, f, f, f, f, f, w, f, w],
+                           [w, f, w, f, w, f, w, w, w, f, w, f, w, f, w, f, w, w, w, f, w, f, w, w, w, w, w, w, w, f, w, f, w, w, w, w, w, f, w, w, w, w, w, w, w, f, w, w, w, w, w],
+                           [w, f, w, f, w, f, f, f, w, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, f, f, f, f, w, f, w, f, f, f, f, f, w, f, f, f, f, f, w],
+                           [w, f, w, f, w, w, w, f, w, f, w, w, w, w, w, f, w, f, w, w, w, w, w, w, w, f, w, f, w, w, w, w, w, w, w, f, w, f, w, f, w, f, w, f, w, w, w, w, w, f, w],
+                           [w, f, w, f, f, f, f, f, w, f, f, f, f, f, f, f, w, f, f, f, w, f, f, f, f, f, w, f, f, f, f, f, w, f, w, f, w, f, w, f, w, f, w, f, f, f, w, f, f, f, w],
+                           [w, f, w, f, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, f, w, w, w, f, w, f, w, w, w, w, w, f, w, f, w, f, w, f, w, f, w, f, w, w, w, f, w, f, w, f, w],
+                           [w, f, w, f, w, f, f, f, f, f, f, f, w, f, f, f, f, f, w, f, f, f, f, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, w],
+                           [w, f, w, f, w, f, w, w, w, w, w, f, w, w, w, w, w, f, w, w, w, w, w, w, w, w, w, w, w, f, w, f, w, w, w, f, w, w, w, f, w, w, w, f, w, w, w, w, w, w, w],
+                           [w, f, w, f, w, f, w, f, f, f, w, f, f, f, w, f, f, f, f, f, f, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, f, f, w],
+                           [w, w, w, f, w, f, w, f, w, f, w, w, w, f, w, f, w, w, w, w, w, f, w, f, w, w, w, f, w, f, w, w, w, f, w, w, w, f, w, w, w, w, w, w, w, f, w, f, w, f, w],
+                           [w, f, w, f, w, f, f, f, w, f, w, f, w, f, w, f, f, f, w, f, w, f, w, f, w, f, f, f, w, f, w, f, w, f, f, f, w, f, w, f, f, f, f, f, w, f, f, f, w, f, w],
+                           [w, f, w, f, w, w, w, w, w, f, w, f, w, f, w, w, w, f, w, f, w, f, w, f, w, f, w, w, w, f, w, f, w, w, w, f, w, f, w, f, w, w, w, f, w, w, w, w, w, f, w],
+                           [w, f, f, f, w, f, f, f, f, f, w, f, w, f, w, f, f, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, f, f, w, f, w, f, f, f, w, f, f, f, f, f, f, f, f, f, w],
+                           [w, f, w, w, w, f, w, w, w, w, w, f, w, f, w, f, w, w, w, w, w, w, w, w, w, w, w, f, w, w, w, f, w, w, w, f, w, w, w, w, w, f, w, w, w, w, w, w, w, f, w],
+                           [w, f, f, f, f, f, w, f, f, f, f, f, f, f, w, f, f, f, f, f, w, f, f, f, f, f, w, f, f, f, w, f, f, f, w, f, w, f, f, f, w, f, w, f, f, f, w, f, f, f, w],
+                           [w, w, w, w, w, w, w, f, w, w, w, w, w, w, w, f, w, w, w, f, w, f, w, w, w, f, w, w, w, f, w, f, w, f, w, f, w, f, w, f, w, w, w, f, w, f, w, w, w, f, w],
+                           [w, f, f, f, f, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, w, f, w, f, w, f, f, f, f, f, w, f, w, f, w, f, f, f, w, f, f, f, f, f, w, f, f, f, w, f, w],
+                           [w, f, w, w, w, f, w, w, w, w, w, f, w, f, w, w, w, f, w, f, w, f, w, f, w, w, w, w, w, w, w, w, w, f, w, w, w, w, w, w, w, w, w, f, w, w, w, f, w, f, w],
+                           [w, f, f, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, w, f, f, f, w, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, w, f, f, f, w, f, w, f, w, f, w, f, w],
+                           [w, f, w, f, w, w, w, w, w, f, w, f, w, w, w, f, w, f, w, w, w, w, w, f, w, w, w, w, w, w, w, w, w, f, w, w, w, w, w, f, w, f, w, f, w, f, w, f, w, w, w],
+                           [w, f, w, f, w, f, f, f, f, f, w, f, f, f, w, f, f, f, f, f, f, f, w, f, w, f, f, f, f, f, f, f, w, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, f, f, w],
+                           [w, f, w, f, w, w, w, w, w, w, w, w, w, f, w, w, w, w, w, w, w, f, w, f, w, f, w, w, w, f, w, w, w, f, w, f, w, w, w, w, w, f, w, w, w, f, w, w, w, f, w],
+                           [w, f, w, f, f, f, f, f, f, f, f, f, w, f, w, f, f, f, w, f, f, f, f, f, w, f, w, f, w, f, f, f, f, f, w, f, f, f, w, f, w, f, w, f, f, f, w, f, f, f, w],
+                           [w, f, w, w, w, w, w, w, w, w, w, f, w, f, w, f, w, f, w, w, w, w, w, w, w, f, w, f, w, w, w, w, w, w, w, w, w, f, w, f, w, f, w, w, w, w, w, f, w, f, w],
+                           [w, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, w, f, w, f, f, f, w, f, f, f, f, f, f, f, w, f, f, f, w, f, w, f, w, f, f, f, w, f, f, f, w, f, w, f, w],
+                           [w, f, w, w, w, f, w, f, w, f, w, w, w, w, w, f, w, f, w, f, w, f, w, w, w, w, w, w, w, f, w, f, w, f, w, f, w, f, w, f, w, w, w, f, w, f, w, f, w, w, w],
+                           [w, f, f, f, f, f, w, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, f, f, w, f, w, f, f, f, f, f, w, f, w, f, f, f, w],
+                           [w, w, w, w, w, w, w, f, w, w, w, f, w, f, w, f, w, w, w, w, w, w, w, w, w, f, w, f, w, f, w, w, w, w, w, w, w, f, w, w, w, w, w, w, w, f, w, w, w, f, w],
+                           [w, f, f, f, f, f, w, f, f, f, w, f, w, f, w, f, w, f, w, f, f, f, f, f, w, f, w, f, f, f, w, f, f, f, f, f, w, f, f, f, w, f, f, f, w, f, f, f, f, f, w],
+                           [w, f, w, f, w, w, w, w, w, f, w, f, w, f, w, f, w, f, w, f, w, f, w, f, w, f, w, f, w, w, w, f, w, w, w, f, w, w, w, f, w, w, w, f, w, w, w, w, w, f, w],
+                           [w, f, w, f, f, f, f, f, f, f, w, f, f, f, w, f, w, f, w, f, w, f, w, f, w, f, w, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, f, f, w, f, w],
+                           [w, f, w, w, w, w, w, w, w, w, w, w, w, w, w, f, w, f, w, f, w, f, w, w, w, f, w, w, w, f, w, w, w, f, w, w, w, f, w, w, w, f, w, w, w, f, w, f, w, f, w],
+                           [w, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, w, f, f, f, w, f, f, f, f, f, f, f, f, f, w, f, f, f, f, f, f, f, w, f, f, f, f, f, f, f, w, f, f, f, w],
+                           [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, f, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]])
 
     def __init__(self):
         pass
@@ -39,7 +84,8 @@ class Search:
 
     @staticmethod
     def estimated_cost(start, end):
-        return abs(start.x - end.x) + abs(start.y - end.y)
+        # return abs(start.x - end.x) + abs(start.y - end.y)
+        return math.hypot(end.x - start.x, end.y - start.y)
 
     def a_star(self, start, stop):
         # Define list of evaluated elements
@@ -50,12 +96,12 @@ class Search:
         parents = {}
 
         # Define matrix of g values for elements, normally infinitely big
-        g = np.full((9, 6), np.inf)
+        g = np.full((52, 52), np.inf)
         # G value for start is zero
         g[start.y, start.x] = 0
 
         # Define matrix of f values for elements, normally infinitely big
-        f = np.full((9, 6), np.inf)
+        f = np.full((52, 52), np.inf)
         # F value for start is heuristic value
         f[start.y, start.x] = self.estimated_cost(start, stop)
 
@@ -96,12 +142,12 @@ class Search:
 
     def make_path(self, parents, current):
         # Add current element to path
-        self.cost_array[current.y, current.x] = 50
+        self.cost_array[current.y, current.x] = self.path
 
         # Go backwards in parent hierarchy
         while current in parents:
             current = parents[current]
-            self.cost_array[current.y, current.x] = 50
+            self.cost_array[current.y, current.x] = self.path
 
         return self.cost_array
 
@@ -146,14 +192,14 @@ class Search:
 
 s = Search()
 
-temp = s.depth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
-plt.imshow(temp)
-plt.show()
+# temp = s.depth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
+# plt.imshow(temp)
+# plt.show()
 
-temp = s.breadth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
-plt.imshow(temp)
-plt.show()
+# temp = s.breadth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
+# plt.imshow(temp)
+# plt.show()
 
-temp = s.a_star(c.Coordinate(0, 0), c.Coordinate(5, 8))
+temp = s.a_star(c.Coordinate(25, 0, 51, 51), c.Coordinate(25, 50, 51, 51))
 plt.imshow(temp)
 plt.show()

@@ -1,0 +1,174 @@
+% Article type supporting font formatting
+\documentclass[a4,12pt]{extarticle}
+
+% Define .tex file encoding
+\usepackage[utf8]{inputenc}
+
+% Norwegian language support
+%\usepackage[norsk]{babel}     
+
+% Indent first paragraph in section
+\usepackage{indentfirst}
+
+% Allows mathbb in tex file
+\usepackage{amsfonts}    
+     
+% Margin defining package
+\usepackage{geometry}         
+\geometry{a4paper
+  ,margin=1in
+}
+
+\usepackage[square,numbers]{natbib}
+
+% For use of graphics in document
+\usepackage{graphicx}         
+
+% Allows multi-line comments in tex file
+\usepackage{verbatim}         
+
+% Allows math in tex file 
+\usepackage{amsmath}          
+
+% Allows math symbols in tex file
+\usepackage{amssymb}          
+
+% Allows use of physics shortcut functions
+%\usepackage{physics}          
+
+% Verbatim env with LaTeX commands
+\usepackage{alltt}            
+
+% Allows \begin{figure}[H]
+\usepackage{float}            
+
+% Necessary for defining colours
+\usepackage{color}            
+\definecolor{linkgreen}{rgb}{0,.5,0}
+\definecolor{linkblue}{rgb}{0,0,.5}
+\definecolor{linkred}{rgb}{.5,0,0}
+\definecolor{blue}{rgb}{.13,.13,1}
+\definecolor{green}{rgb}{0,.5,0}
+\definecolor{red}{rgb}{.9,0,0}
+
+% Hyperlinks in document
+\usepackage{hyperref}  
+\hypersetup{
+  colorlinks=true,     % True for colored links
+  linktoc=all,         % True for table of contents links
+  linkcolor=linkblue,  % Colour for links
+  urlcolor=linkgreen,  % Colour for URLs
+  citecolor=linkred    % Colour for citations
+}
+
+% Listing package for code examples
+\usepackage{listings}         
+\lstset{
+  language=C++,                % Set language to C++
+  showspaces=false,            % Don't show space chars
+  showtabs=false,              % Don't show tab chars
+  breaklines=true,             % Break long lines of code
+  showstringspaces=false,      % Don't show spaces in strings
+  breakatwhitespace=true,      % Break at white space only
+  commentstyle=\color{green},  % Set colour for comments
+  keywordstyle=\color{blue},   % Set colours for keywords
+  stringstyle=\color{red},     % Set colour for strings
+  basicstyle=\ttfamily,        % Set basic style
+  tabsize=2                    % Set tabsize
+}
+
+% Referencing, last for compatibility reasons
+\usepackage[noabbrev]{cleveref}
+
+% Command to set two lines under text
+\newcommand{\uunderline}[1]{\underline{\underline{#1}}}
+
+% Command to use integral with limits
+\newcommand{\Int}{\int\limits}    
+
+% Command to use double integral with limits
+\newcommand{\IInt}{\iint\limits}  
+
+% Command to use triple integral with limits
+\newcommand{\IIInt}{\iiint\limits}
+
+% Command removes section numbering
+\newcommand{\mysection}[2]{   
+\setcounter{section}{#1}
+\section*{#2}
+\addcontentsline{toc}{section}{#2}
+}
+
+% Command removes subsection numbering
+\newcommand{\mysubsection}[2]{  
+\setcounter{subsection}{#1}
+\subsection*{#2}
+\addcontentsline{toc}{subsection}{#2}
+}
+
+% Command removes subsubsection numbering
+\newcommand{\mysubsubsection}[2]{ 
+\setcounter{subsubsection}{#1}
+\subsubsection*{#2}
+\addcontentsline{toc}{subsubsection}{#2}
+}
+
+% Makes matrices look square-ish
+\renewcommand*{\arraystretch}{1.5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%      Title, Author, and Date      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Report Template}
+\author{Daniel Aaron Salwerowicz}
+\date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%           Start document          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Create the main title section   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%      Abstract for the report      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract} 
+Say why this report exists. Motivations behind it and what not.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%         ToC for the report        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\tableofcontents
+%\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  The main content of the report  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\mysection{1}{Introduction}
+Introduce project, show given data and constants.
+
+\mysection{2}{Methods}
+Talk about methods you use.
+
+\mysection{3}{Results}
+Show work and results that you got using your methods.
+
+\mysection{4}{Analysis}
+Analyze findings.
+
+\mysection{5}{Discussion}
+Discuss the findings.
+
+\mysection{6}{Bibliography}
+\begingroup
+\def\section*#1{}
+\bibliographystyle{abbrvnat}
+\bibliography{references}
+\endgroup
+\end{document} 
