@@ -13,35 +13,32 @@ Date:     Yes, please
 
 
 class Coordinate:
-    max_x = 5
-    max_y = 8
-    x = 0
-    y = 0
-
-    def __init__(self, x, y):
+    def __init__(self, x=0, y=0, max_x=5, max_y=8):
+        self.max_x = max_x
+        self.max_y = max_y
         self.x = x
         self.y = y
 
-    def get_left(self):
+    def left(self):
         if self.x > 0:
-            return Coordinate(self.x - 1, self.y)
+            return Coordinate(self.x - 1, self.y, self.max_x, self.max_y)
 
-    def get_right(self):
+    def right(self):
         if self.x < self.max_x:
-            return Coordinate(self.x + 1, self.y)
+            return Coordinate(self.x + 1, self.y, self.max_x, self.max_y)
 
-    def get_up(self):
+    def up(self):
         if self.y > 0:
-            return Coordinate(self.x, self.y - 1)
+            return Coordinate(self.x, self.y - 1, self.max_x, self.max_y)
 
-    def get_down(self):
+    def down(self):
         if self.y < self.max_y:
-            return Coordinate(self.x, self.y + 1)
+            return Coordinate(self.x, self.y + 1, self.max_x, self.max_y)
 
-    def get_neighbours(self):
+    def neighbours(self):
         # Get neighbours, some can be None
-        neigh = [self.get_up(), self.get_right(),
-                 self.get_down(), self.get_left()]
+        neigh = [self.up(), self.right(),
+                 self.down(), self.left()]
 
         # Create new list without None elements from neigh list
         return [x for x in neigh if x is not None]

@@ -16,130 +16,144 @@ import numpy as np
 
 
 class Search:
-    cost_array = np.array([[1, 1, 2, 2, 1, 1],
-                     [1, 1, 1, 1, 1, 1],
-                     [1, 1, 1, 1, 1, 1],
-                     [1, 1, 3, 3, 2, 1],
-                     [1, 1, 1, 2, 2, 1],
-                     [1, 1, 1, 1, 1, 1],
-                     [1, 2, 3, 3, 1, 1],
-                     [1, 1, 1, 1, 1, 1],
-                     [1, 3, 1, 1, 1, 1]])
+    # Cost of going through wall, very big to avoid path going through walls
+    w = 100
+    # Cost of going through floor, very low to encourage algorithm to use it
+    f = 1
+    # Cost array for movement in maze
+    cost_array = np.array([[f, f, f, f, f, w],
+                           [f, w, w, w, f, f],
+                           [f, f, f, w, w, f],
+                           [f, w, f, f, f, f],
+                           [f, w, w, f, w, f],
+                           [f, f, w, f, w, w],
+                           [w, f, w, f, f, f],
+                           [f, f, w, f, w, f],
+                           [w, f, f, f, w, f]])
 
+    def __init__(self):
+        pass
 
-    def cost(coordinate):
-        return Search.cost_array[coordinate.y][coordinate.x]
+    def cost(self, coordinate):
+        return self.cost_array[coordinate.y, coordinate.x]
 
+    @staticmethod
     def estimated_cost(start, end):
         return abs(start.x - end.x) + abs(start.y - end.y)
 
-    def a_star(start, stop):
+    def a_star(self, start, stop):
         # Define list of evaluated elements
-        H = []
+        searched = []
         # Define list of elements to test
-        S = [start]
+        search = [start]
         # Define dictionary of element parents
         parents = {}
 
         # Define matrix of g values for elements, normally infinitely big
-        Gs = np.full((9, 6), np.inf)
+        g = np.full((9, 6), np.inf)
         # G value for start is zero
-        Gs[start.y, start.x] = 0
+        g[start.y, start.x] = 0
 
         # Define matrix of f values for elements, normally infinitely big
-        Fs = np.full((9, 6), np.inf)
+        f = np.full((9, 6), np.inf)
         # F value for start is heuristic value
-        Fs[start.y, start.x] = Search.estimated_cost(start, stop)
+        f[start.y, start.x] = self.estimated_cost(start, stop)
 
-        while S:
-            # Sort S according to F values of elements, smallest on back
-            S.sort(key=lambda c: (Fs[c.y, c.x]), reverse=True)
+        while search:
+            # Sort search according to F values of elements, smallest on back
+            search.sort(key=lambda node: f[node.y, node.x], reverse=True)
             # Pop the smallest element
-            current = S.pop()
+            current = search.pop()
             # Add current element to evaluated element list
-            H.append(current)
+            searched.append(current)
 
             # If current is goal, then stop
             if current == stop:
-                return Search.makePath(parents, current)
+                return self.make_path(parents, current)
 
             # For all neighbours of current that were not evaluated so far
-            for n in [c for c in current.get_neighbours() if c not in H]:
+            for n in [x for x in current.neighbours() if x not in searched]:
                 # Add neighbour to test stack if not already there
-                if n not in S:
-                    S.append(n)
+                if n not in search:
+                    search.append(n)
 
                 # Find new g value for neighbour
-                temp_g = Gs[current.y, current.x] + Search.cost(n)
+                temp_g = g[current.y, current.x] + self.cost(n)
 
                 # Skip if new g value is larger than or equal to previous
-                if temp_g >= Gs[n.y, n.x]:
+                if temp_g >= g[n.y, n.x]:
                     continue
 
                 # Found better path, set parent of neighbour to current
                 parents[n] = current
                 # Update g value for neighbour
-                Gs[n.y, n.x] = temp_g
+                g[n.y, n.x] = temp_g
                 # Update f value for neighbour
-                Fs[n.y, n.x] = temp_g + Search.estimated_cost(n, stop)
+                f[n.y, n.x] = temp_g + self.estimated_cost(n, stop)
 
         # No path exists, return empty path
-        return np.zeros((9, 6), dtype=int)
+        return self.cost_array
 
-    def makePath(parents, current):
-        # Create empty path matrix
-        matrix = np.zeros((9, 6), dtype=int)
+    def make_path(self, parents, current):
         # Add current element to path
-        matrix[current.y, current.x] = 1
+        self.cost_array[current.y, current.x] = 50
 
         # Go backwards in parent hierarchy
         while current in parents:
             current = parents[current]
-            matrix[current.y, current.x] = 1
+            self.cost_array[current.y, current.x] = 50
 
-        return matrix
+        return self.cost_array
 
-    def depth_first_search(start, end):
-        return Search.default_search(start, end, True)
+    def depth_first_search(self, start, end):
+        return self.default_search(start, end, True)
 
-    def breadth_first_search(start, end):
-        return Search.default_search(start, end, False)
+    def breadth_first_search(self, start, end):
+        return self.default_search(start, end, False)
 
+    @staticmethod
     def default_search(start, end, is_depth_first):
-        # Define search stack S
-        S = [start]
-        # Define visited stack H
-        H = []
+        # Define search stack search
+        search = [start]
+        # Define visited stack searched
+        searched = []
         # Define 9x6 matrix for showing visited nodes, 0 not visited, 1 visited
         matrix = np.zeros((9, 6), dtype=int)
 
-        while S:
-            # Pop last element from S
-            i = S.pop()
-            # Add element to H
-            H.append(i)
+        while search:
+            # Pop last element from search
+            i = search.pop()
+            # Add element to searched
+            searched.append(i)
             # Mark element as visited in matrix
             matrix[i.y][i.x] = 1
 
             # If element is equal to end goal, stop and return matrix
             if i == end:
-                plt.imshow(matrix)
-                return H
+                return matrix
             else:
                 # Get ns in array
-                neigh = i.get_neighbours()
-                # Add unvisited ns to S
+                neigh = i.neighbours()
+                # Add unvisited ns to search
                 if is_depth_first:
-                    S.extend([cord for cord in neigh if cord not in H])
+                    search.extend([x for x in neigh if x not in searched])
                 else:
-                    S = [cord for cord in neigh if cord not in H] + S
+                    search = [x for x in neigh if x not in searched] + search
 
-        # S stack empty, no result.
-        plt.imshow(matrix)
-        return H
+        # search stack empty, no result.
+        return matrix
 
-#Search.depth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
-#Search.breadth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
 
-temp = Search.a_star(c.Coordinate(1, 0), c.Coordinate(4, 7))
+s = Search()
+
+temp = s.depth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
 plt.imshow(temp)
+plt.show()
+
+temp = s.breadth_first_search(c.Coordinate(1, 0), c.Coordinate(4, 7))
+plt.imshow(temp)
+plt.show()
+
+temp = s.a_star(c.Coordinate(0, 0), c.Coordinate(5, 8))
+plt.imshow(temp)
+plt.show()
