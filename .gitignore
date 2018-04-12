@@ -6,4 +6,4 @@ __pycache__/
 *.blg
 *.log
 *.out
-*.syntex.gz
+*.gz
