@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Shpider Editor
-
 Coordinate class representing coordinates on the map. Contains get_neighbours
 method that returns a list of valid neighbouring tiles.
 
