@@ -226,9 +226,9 @@ First split is going to be $x > 3$, since there are 4 red values in region defin
 
 Second split will be $y > 2$, since there are 3 red values in region defined by $y \leq 2$ and no blue values. So $(2,0)$.
 
-Third and last split will be $y > 5.5$, since there are 5 blue values in region $y \leq 5.5$ and no red values. So $(0,5)$.
+Third and last split will be $y > 6.5$, since there are 6 blue values in region $y \leq 6.5$ and no red values. So $(0,6)$.
 
-The remaining region will be majorly blue with 4 blue and 2 red values. So $(2,4)$.
+The remaining region will be majorly blue with 3 blue and 2 red values. So $(2,3)$.
 
 Those splits are pretty much justified by the algorithm itself, since I tried to follow it as well as I could and understood it.
 
@@ -248,7 +248,9 @@ Resulting tree and regions can be found in \cref{Regions,Tree}.
 \end{figure}
 
 \mysubsection{2}{b}
-Plotting the test values $( 6.5 , 5.5 )$ and $( 4.1 , 6.5 )$ we can clearly see that the first point lands in the blue region, and is therefore defined as blue, whereas the second point falls in majorly blue region therefore there is $66.\overline{6}\%$ bias that it will be defined as blue and $33.\overline{3}\%$ bias that it will be defined as red. Therefore in my opinion and if my work is correct both of these points will be defined as blue. \Cref{NewValues} shows those new points plotted in the graph.
+Plotting the test values $( 6.5 , 5.5 )$ and $( 4.1 , 6.5 )$ we can clearly see that the both point land in the blue region, and are therefore defined as blue. Even if one of those points were to fall into the region in the top right corner it would still be defined as a blue point since majority vote would rule them to be blue.
+
+Therefore in my opinion and if my work is correct both of these points will be defined as blue. \Cref{NewValues} shows those new points plotted in the graph.
 
 \begin{figure}[H]
   \centering
