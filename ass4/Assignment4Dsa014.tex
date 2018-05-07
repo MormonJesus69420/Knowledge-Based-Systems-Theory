@@ -148,7 +148,7 @@ R =
 -\inf &     0 &   -10 & -\inf & -\inf &   100 \\
 0 & -\inf & -\inf &     0 &     0 & -\inf \\
 -\inf &     0 & -\inf &     0 &     0 &   100 \\
--\inf & -\inf &   -10 & -\inf &     0 &   100 
+-\inf & -\inf &   -10 & -\inf &     0 &     0 
 \end{bmatrix} &
 Q =	
 \begin{bmatrix}
@@ -160,7 +160,7 @@ Q =
 0 &   0 &   0 &   0 &   0 &   0  
 \end{bmatrix}
 \end{align*}
-They are initialized like that since Q-matrix is always set to zero at the start and R-matrix represents enviromental values. As I have interpreted it there's no penalty for staying in the same room or for moving between rooms that were not specified in text. Therefore only moves that end up in room 3 or 6 have values other than zero associated with them. $-\inf$ is used to show that there is no connection between rooms ensuring that algorithm will never pick them.
+They are initialized like that since Q-matrix is always set to zero at the start and R-matrix represents environmental values. As I have interpreted it there's no penalty for staying in the same room or for moving between rooms that were not specified in text. Therefore only moves that end up in room 3 or 6 have values other than zero associated with them. $-\inf$ is used to show that there is no connection between rooms ensuring that algorithm will never pick them. Going from state 6 to 6 gives no reward as state 6 is so called absorbing state and when robot gets there it stops moving.
 
 Formula for calculating values in Q-matrix given learning factor $\alpha$ is 1:
 \begin{align*}
