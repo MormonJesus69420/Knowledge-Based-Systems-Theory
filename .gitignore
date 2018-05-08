@@ -3,6 +3,7 @@
 *.autosave
 *.backup
 *.layout
+*.~lock*
 *.user*
 *.save
 *.user
