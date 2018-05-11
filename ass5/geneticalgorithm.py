@@ -7,28 +7,54 @@ Version:  69.420
 Author:   MormonJesus69420
 Date:     Yes, please
 """
-from random import random
-
+from math import sqrt, fabs
+from random import random, randint
 from typing import List
-
-from bitstring import BitArray
 
 from box import Box
 
-from math import ceil
 
 class GeneticAlgorithm:
+    def __init__(self, x=3, y=4):
+        self.x = x
+        self.y = y
 
     def calculate_fitness(self, population: List[Box]) -> None:
         for box in population:
-            self.correct_quadrant_check(box)
-            self.least_effort_check(box)
+            self._correct_quadrant_check(box)
+            self._least_effort_check(box)
 
-    def correct_quadrant_check(self, box: Box) -> None:
-        pass
+            # Want fitness to be positive, but harshly punished.
+            if box.fitness < 0:
+                box.fitness = fabs(box.fitness / 100)
 
-    def least_effort_check(self, box: Box) -> None:
-        pass
+        # Sort according to fitness, best first.
+        population.sort(key=lambda box: box.fitness, reverse=True)
+
+    def _correct_quadrant_check(self, box: Box) -> None:
+        box.fitness += 10 if self._is_past_x(box.x) else -15
+        box.fitness += 10 if self._is_past_y(box.y) else -15
+        box.fitness += 50 if self._is_past_x(box.x) and self._is_past_y(box.y) else - 75
+
+    def _least_effort_check(self, box: Box) -> None:
+        if not self._is_past_x(box.x) or not self._is_past_y(box.y):
+            return  # Do not reward if not in the right quadrant
+
+        # Calculate distance
+        distance = sqrt((self.x - box.x) ** 2 + (self.y - box.y) ** 2)
+
+        # To reward lowest distance, add 100/distance.
+        # Thus lower distance gives higher number
+        if distance < 0.009:
+            box.fitness = 10 ** 10
+        else:
+            box.fitness += 100 / (distance/10)
+
+    def _is_past_x(self, x: float) -> bool:
+        return x >= self.x
+
+    def _is_past_y(self, y: float) -> bool:
+        return y >= self.y
 
     def roulette(self, population: List[Box]) -> List[Box]:
         # Get total fitness
@@ -66,34 +92,9 @@ class GeneticAlgorithm:
             if percentage < acc[i]:
                 return i
 
-# Random population values guaranteed to be random
-# pop = [Box(BitArray('0b1100011101000001')),
-#        Box(BitArray('0b1001100101100011')),
-#        Box(BitArray('0b1010101010100111')),
-#        Box(BitArray('0b0111000001011111')),
-#        Box(BitArray('0b1110111010000101')),
-#        Box(BitArray('0b1110000011011011')),
-#        Box(BitArray('0b1110001001101010')),
-#        Box(BitArray('0b0100010100100011')),
-#        Box(BitArray('0b1111010000101101')),
-#        Box(BitArray('0b0110011101101011')),
-#        Box(BitArray('0b0111101000111011')),
-#        Box(BitArray('0b1100001010101000')),
-#        ]
-
-r = GeneticAlgorithm().roulette
-pop = [Box(BitArray('0b1111111111111111')),
-       Box(BitArray('0b0000000000000000')),
-       Box(BitArray('0b0101010101010101')),
-       Box(BitArray('0b1111111100000000')),
-       ]
-
-pop[0].fitness = 50
-pop[1].fitness = 30
-pop[2].fitness = 15
-pop[3].fitness = 5
-
-meh = r(pop)
-
-for box in meh:
-    print(box.x_chromosome.bin)
+    def mutate_random(self, population: List[Box], no_mutations: int):
+        for _ in range(no_mutations):
+            if randint(0, 1) == 0:
+                population[randint(0, len(population) - 1)].mutate_x()
+            else:
+                population[randint(0, len(population) - 1)].mutate_y()
