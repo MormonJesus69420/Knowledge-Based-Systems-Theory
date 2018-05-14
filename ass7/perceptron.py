@@ -34,7 +34,8 @@ class Perceptron:
             # Get error (difference between estimate and actual value)
             error = estimate - y
             # Update weights
-            self._weights -= self._alpha * error * array([x[0], x[1], 1.0])
+
+            self._weights -= self._alpha * error * array([x[0], x[1], 1.5])
 
         # Add average error to list
         self._average_training_error.append(self._get_average_error(inputs, outputs))
@@ -45,7 +46,7 @@ class Perceptron:
         # Add average error to list
         self._average_test_error.append(self._get_average_error(inputs, outputs))
         # Print out last added item
-        print(f'Average testing error: {self._average_test_error[-1]}')
+        print(f'Average testing error:  {self._average_test_error[-1]}')
 
     def _f_func(self, x):
         # Simple cutoff function, 1 if result is over 0, 0 otherwise
@@ -72,9 +73,9 @@ class Perceptron:
 
 
 training_set = array([
-    [-10, 8],
-    [-10, 14],
-    [-9, 12],
+    [-10, 5],
+    [-10, 18],
+    [-9, 20],
     [-5, 5],
     [-3, 0],
     [2, -3],
@@ -122,7 +123,7 @@ test_set = array([
     [6, -14],
     [-7, 18],
     [-9, 30],
-    [-5, 15],
+    [-5, 8],
     [-1, 14],
     [1, 4],
     [2, 0],
@@ -152,4 +153,4 @@ test_results = array([
 ])
 
 perceptron = Perceptron()
-perceptron.train_and_test(training_set, training_results, test_set, test_results, 10)
+perceptron.train_and_test(training_set, training_results, test_set, test_results, 80)

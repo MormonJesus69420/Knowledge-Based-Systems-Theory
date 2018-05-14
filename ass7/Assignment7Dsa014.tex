@@ -253,28 +253,28 @@ Resulting values have been plotted and can be seen in \cref{fig:TrainingValues,f
 \end{figure}
 
 Results:
-\begin{verbatim*}
+\begin{verbatim}
 Average training error: 0.23529411764705882
-Average testing error: 0.29411764705882354
+Average testing error:  0.29411764705882354
 Average training error: 0.11764705882352941
-Average testing error: 0.23529411764705882
-Average training error: 0.17647058823529413
-Average testing error: 0.29411764705882354
-Average training error: 0.17647058823529413
-Average testing error: 0.23529411764705882
-Average training error: 0.11764705882352941
-Average testing error: 0.23529411764705882
-Average training error: 0.11764705882352941
-Average testing error: 0.23529411764705882
+Average testing error:  0.23529411764705882
 Average training error: 0.058823529411764705
-Average testing error: 0.23529411764705882
+Average testing error:  0.29411764705882354
+Average training error: 0.058823529411764705
+Average testing error:  0.23529411764705882
 Average training error: 0.0
-Average testing error: 0.23529411764705882
+Average testing error:  0.23529411764705882
 Average training error: 0.0
-Average testing error: 0.23529411764705882
+Average testing error:  0.23529411764705882
 Average training error: 0.0
-Average testing error: 0.23529411764705882
-\end{verbatim*}
+Average testing error:  0.23529411764705882
+Average training error: 0.0
+Average testing error:  0.23529411764705882
+Average training error: 0.0
+Average testing error:  0.23529411764705882
+Average training error: 0.0
+Average testing error:  0.23529411764705882
+\end{verbatim}
 After 10 epochs I can see no more improvements. Graphs showing average error for training and testing sets can be seen in \cref{fig:TrainingErrorGraph,fig:TestingErrorGraph}.
 \begin{figure}[H]
   \centering
@@ -290,6 +290,35 @@ After 10 epochs I can see no more improvements. Graphs showing average error for
 \end{figure}
 
 \mysubsection{3}{c}
+I need about 4 cycles to minimize the error. Though I need 8 to 10 cycles to minimize the error if I decrease the bias.
 
+\mysubsection{4}{d}
+My training error drops to 0, while my testing error drops to 0.235.
+
+\mysubsection{5}{e}
+Using Excel I found the regression line between those two sets to have following attributes: y interception = 3.63, x-slope = -1.76. Drawing that as a chart I get following \cref{fig:RegressionLine}.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{RegressionLine}
+  \caption{Training errors for perceptron using original values}
+  \label{fig:RegressionLine}
+\end{figure}
+
+\mysubsubsection{6}{f}
+Back Propagation Network is able to solve much more complex problems, for example problems where variables are not linearly separable. Given how this is a simple problem with simple numerical values and linearly separated values I have no need for Back Propagation Network.
+
+Though as I have mentioned before I needed to change the values to linearly separate the input values. If I use the values provided in the assignment my perceptor struggles greatly and needs about 40 to 50 epochs to minimize the error. However error does not platau, it instead settles jumping back and forth between two values. As can be seen in \cref{fig:TrainingErrorOriginal,fig:TestingErrorOriginal} below.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{TrainingErrorOriginal}
+  \caption{Training errors for perceptron using original values}
+  \label{fig:TrainingErrorOriginal}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{TestingErrorOriginal}
+  \caption{Testing errors for perceptron using original values}
+  \label{fig:TestingErrorOriginal}
+\end{figure}
 
 \end{document} 
