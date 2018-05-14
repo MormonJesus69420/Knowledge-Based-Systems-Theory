@@ -29,26 +29,25 @@ pop = [Box(BitArray(uint=randint(0, 2 ** 24 - 1), length=24)),
        ]
 
 # Initialize genetic algorithm
-ga = GeneticAlgorithm(12, 23)
+ga = GeneticAlgorithm(3, 4)
 
 for generation in range(1, 10000):
     if generation % 4 == 0:
-        ga.mutate_random(pop, 300)
+        ga.mutate_random(pop, 100)
 
     ga.calculate_fitness(pop)
-
-    pop = ga.roulette(pop)
 
     if len(pop) > 5000:
         pop = pop[:1000]
 
-    print(f'Generation {generation} best specimen {pop[0].x} {pop[0].y} '
+    pop = ga.roulette(pop)
+
+    print(f'Generation {generation} best specimen -> {pop[0].x} {pop[0].y} '
           f'x chromosome: {pop[0].x_chromosome.bin} '
-          f'y chromosome: {pop[0].y_chromosome.bin} '
-          )
+          f'y chromosome: {pop[0].y_chromosome.bin} ')
 
     if pop[0].x == ga.x and pop[0].y == ga.y:
-        print(f'Optimal found in generation {generation}, '
+        print(f'Optimal found in generation {generation}, -> '
               f'x chromosome: {pop[0].x_chromosome.bin} '
               f'y chromosome: {pop[0].y_chromosome.bin}')
         break
